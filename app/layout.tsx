@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import NavBar from "../components/navbar";
-import { orbitron } from "./fonts";
+import { orbitron, exo2 } from "./fonts";
 import "./globals.css";
 
 interface LayoutProps {
@@ -10,14 +10,17 @@ const RootLayout = ({ children }: LayoutProps) => {
 	return (
 		<html
 			lang="en"
-			className={orbitron.variable}
+			className={`${exo2.variable} ${orbitron.variable}`}
 		>
-			<body className="bg-orange-50 flex flex-col px-4 py-2 min-h-screen">
+			<body
+				className="bg-orange-50 flex flex-col px-4 py-2 min-h-screen"
+				suppressHydrationWarning={true}
+			>
 				<header>
 					<NavBar />
 				</header>
 				<main className="py-3 grow">{children}</main>
-				<footer className="border-t py-3 text-center text-xs">
+				<footer className="border-t py-3 text-center text-slate-500 text-xs">
 					Game data and images courtesy of{" "}
 					<a
 						href="https://rawg.io/"

@@ -12,8 +12,9 @@ module.exports = {
 		extend: {
 			fontFamily: {
 				orbitron: ["var(--font-orbitron)", "sans-serif"],
+				sans: ["var(--font-exo2)", "sans-serif"],
 			},
 		},
 	},
-	plugins: [],
+	plugins: [require("@tailwindcss/typography")],
 };

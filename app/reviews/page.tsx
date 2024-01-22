@@ -1,41 +1,41 @@
 import Link from "next/link";
 import Heading from "@/components/Heading";
+import { getReviews, getSlugs } from "@/lib/reviews";
 
-const ReviewsPage = () => {
+export const generateStaticParams = async () => {
+	const slugs = await getSlugs();
+	return slugs.map((slug) => ({ slug }));
+};
+
+const ReviewsPage = async () => {
+	const reviews = await getReviews();
 	return (
 		<>
 			<Heading>Reviews</Heading>
-			<ul className="flex flex-col gap-3">
-				<li className="bg-white border rounded shadow w-80 hover:shadow-xl">
-					<Link href="/reviews/stardew-valley">
-						<img
-							src="/images/stardew-valley.jpg"
-							alt=""
-							width="320"
-							height="180"
-							className=" rounded-t"
-						/>
-						<h2 className="font-semibold font-orbitron py-1 text-center">
-							Stardew Valley
-						</h2>
-					</Link>
-				</li>
-				<li className="bg-white border rounded shadow w-80 hover:shadow-xl">
-					<Link href="/reviews/hollow-knight">
-						<img
-							src="/images/hollow-knight.jpg"
-							alt=""
-							width="320"
-							height="180"
-							className="rounded-t"
-						/>
-						<h2 className="font-semibold font-orbitron py-1 text-center">
-							Hollow Knight
-						</h2>
-					</Link>
-				</li>
+			<ul className="flex flex-row flex-wrap gap-3">
+				{reviews.map((review) => {
+					const { slug, title, image } = review;
+					return (
+						<li
+							key={slug}
+							className="bg-white border rounded shadow w-80 hover:shadow-xl"
+						>
+							<Link href={`/reviews/${slug}`}>
+								<img
+									src={image}
+									alt=""
+									width="320"
+									height="180"
+									className=" rounded-t"
+								/>
+								<h2 className="font-semibold font-orbitron py-1 text-center">
+									{title}
+								</h2>
+							</Link>
+						</li>
+					);
+				})}
 			</ul>
-			<p>Here we'll list all the reviews.</p>
 		</>
 	);
 };
