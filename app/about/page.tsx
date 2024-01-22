@@ -1,7 +1,9 @@
+import Heading from "@/components/Heading";
+
 const AboutPage = () => {
 	return (
 		<>
-			<h1>About Us</h1>
+			<Heading>About Us</Heading>
 			<p>This is the about page</p>
 		</>
 	);
