@@ -1,5 +1,4 @@
 import Heading from "@/components/Heading";
-//import ShareButtons from "@/components/ShareButtons";
 import ShareLinkButton from "@/components/ShareLinkButton";
 import { getReview } from "@/lib/reviews";
 
