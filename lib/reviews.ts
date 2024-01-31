@@ -28,5 +28,11 @@ export const getReviews = async () => {
 		const review = await getReview(slug);
 		reviews.push(review);
 	}
+	reviews.sort((a, b) => b.date.localeCompare(a.date));
 	return reviews;
+};
+
+export const getFeaturedReview = async () => {
+	const reviews = await getReviews();
+	return reviews[0];
 };

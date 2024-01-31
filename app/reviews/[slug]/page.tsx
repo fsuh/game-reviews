@@ -1,4 +1,6 @@
 import Heading from "@/components/Heading";
+//import ShareButtons from "@/components/ShareButtons";
+import ShareLinkButton from "@/components/ShareLinkButton";
 import { getReview } from "@/lib/reviews";
 
 interface ReviewPageProps {
@@ -7,12 +9,24 @@ interface ReviewPageProps {
 	};
 }
 
+export const generateMetadata = async ({
+	params: { slug },
+}: ReviewPageProps) => {
+	const review = await getReview(slug);
+	return {
+		title: review.title,
+	};
+};
+
 const ReviewPages = async ({ params: { slug } }: ReviewPageProps) => {
 	const review = await getReview(slug);
 	return (
 		<>
 			<Heading>{review.title}</Heading>
-			<p className="italic pb-2">{review.date}</p>
+			<div className="flex gap-3 items-baseline">
+				<p className="italic pb-2">{review.date}</p>
+				<ShareLinkButton />
+			</div>
 			<img
 				src={review.image}
 				alt=""

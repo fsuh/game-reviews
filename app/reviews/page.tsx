@@ -1,6 +1,11 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import Heading from "@/components/Heading";
 import { getReviews, getSlugs } from "@/lib/reviews";
+
+export const metadata: Metadata = {
+	title: "Reviews",
+};
 
 export const generateStaticParams = async () => {
 	const slugs = await getSlugs();

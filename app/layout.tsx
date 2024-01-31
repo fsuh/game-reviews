@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { Metadata } from "next";
 import NavBar from "../components/navbar";
 import { orbitron, exo2 } from "./fonts";
 import "./globals.css";
@@ -6,6 +7,14 @@ import "./globals.css";
 interface LayoutProps {
 	children: ReactNode;
 }
+
+export const metadata: Metadata = {
+	title: {
+		default: "Indie Gamer",
+		template: "%s | Indie Gamer",
+	},
+};
+
 const RootLayout = ({ children }: LayoutProps) => {
 	return (
 		<html
