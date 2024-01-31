@@ -1,11 +1,13 @@
 import Heading from "@/components/Heading";
 import ShareLinkButton from "@/components/ShareLinkButton";
-import { getReview } from "@/lib/reviews";
+import { getReview, getSlugs } from "@/lib/reviews";
+
+interface ReviewPageParams {
+	slug: string;
+}
 
 interface ReviewPageProps {
-	params: {
-		slug: string;
-	};
+	params: ReviewPageParams;
 }
 
 export const generateMetadata = async ({
@@ -15,6 +17,11 @@ export const generateMetadata = async ({
 	return {
 		title: review.title,
 	};
+};
+
+export const generateStaticParams = async (): Promise<ReviewPageParams[]> => {
+	const slugs = await getSlugs();
+	return slugs.map((slug) => ({ slug }));
 };
 
 const ReviewPages = async ({ params: { slug } }: ReviewPageProps) => {
