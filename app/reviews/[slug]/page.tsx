@@ -41,7 +41,7 @@ const ReviewPages = async ({ params: { slug } }: ReviewPageProps) => {
 				className="mb-2 rounded"
 			/>
 			<article
-				dangerouslySetInnerHTML={{ __html: review.body }}
+				dangerouslySetInnerHTML={{ __html: review.body || "" }}
 				className="max-w-screen-sm prose prose-slate"
 			></article>
 		</>
