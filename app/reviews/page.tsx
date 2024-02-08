@@ -9,12 +9,12 @@ export const metadata: Metadata = {
 };
 
 const ReviewsPage = async () => {
-	const reviews = await getReviews();
+	const reviews = await getReviews(6);
 	return (
 		<>
 			<Heading>Reviews</Heading>
 			<ul className="flex flex-row flex-wrap gap-3">
-				{reviews.map((review) => {
+				{reviews.map((review, index) => {
 					const { slug, title, image } = review;
 					return (
 						<li
@@ -25,6 +25,7 @@ const ReviewsPage = async () => {
 								<Image
 									src={image}
 									alt=""
+									priority={index === 0}
 									width="320"
 									height="180"
 									className=" rounded-t"

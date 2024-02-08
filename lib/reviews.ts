@@ -6,6 +6,7 @@ import qs from "qs";
 export interface Review {
 	slug: string;
 	title: string;
+	subtitle?: string;
 	date: string;
 	image: string;
 	body?: string;
@@ -63,6 +64,7 @@ const toReview = (item: CmsItem): Review => {
 	return {
 		slug: attributes.slug,
 		title: attributes.title,
+		subtitle: attributes.subtitle,
 		date: attributes.publishedAt.slice(0, "yyyy-mm-dd".length),
 		image: CMS_URL + attributes.image.data.attributes.url,
 	};
@@ -107,17 +109,17 @@ export const getSlugs = async (): Promise<string[]> => {
 // 	return reviews;
 // };
 
-export const getReviews = async (): Promise<Review[]> => {
+export const getReviews = async (pageSize: number): Promise<Review[]> => {
 	const { data } = await fetchReviews({
 		fields: ["slug", "title", "subtitle", "publishedAt"],
 		populate: { image: { fields: ["url"] } },
-		pagination: { pageSize: 6 },
+		pagination: { pageSize },
 		sort: ["publishedAt:desc"],
 	});
 	return data.map(toReview);
 };
 
-export const getFeaturedReview = async (): Promise<Review> => {
-	const reviews = await getReviews();
-	return reviews[0];
-};
+// export const getFeaturedReview = async (): Promise<Review> => {
+// 	const reviews = await getReviews();
+// 	return reviews[0];
+// };

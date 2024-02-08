@@ -30,6 +30,7 @@ const ReviewPages = async ({ params: { slug } }: ReviewPageProps) => {
 	return (
 		<>
 			<Heading>{review.title}</Heading>
+			<p className="font-semibold pb-3">{review.subtitle}</p>
 			<div className="flex gap-3 items-baseline">
 				<p className="italic pb-2">{review.date}</p>
 				<ShareLinkButton />
@@ -37,6 +38,7 @@ const ReviewPages = async ({ params: { slug } }: ReviewPageProps) => {
 			<Image
 				src={review.image}
 				alt=""
+				priority
 				width="640"
 				height="360"
 				className="mb-2 rounded"
