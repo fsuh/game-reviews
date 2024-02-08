@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Heading from "@/components/Heading";
 import { getReviews } from "@/lib/reviews";
 
@@ -21,7 +22,7 @@ const ReviewsPage = async () => {
 							className="bg-white border rounded shadow w-80 hover:shadow-xl"
 						>
 							<Link href={`/reviews/${slug}`}>
-								<img
+								<Image
 									src={image}
 									alt=""
 									width="320"

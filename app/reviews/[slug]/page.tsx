@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Heading from "@/components/Heading";
 import ShareLinkButton from "@/components/ShareLinkButton";
 import { getReview, getSlugs } from "@/lib/reviews";
@@ -33,7 +34,7 @@ const ReviewPages = async ({ params: { slug } }: ReviewPageProps) => {
 				<p className="italic pb-2">{review.date}</p>
 				<ShareLinkButton />
 			</div>
-			<img
+			<Image
 				src={review.image}
 				alt=""
 				width="640"
