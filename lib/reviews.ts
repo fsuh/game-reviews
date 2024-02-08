@@ -11,8 +11,9 @@ export interface Review {
 	image: string;
 	body?: string;
 }
-export interface FullReview extends Review {
-	body: string;
+export interface PaginatedReviews {
+	pageCount: number;
+	reviews: Review[];
 }
 export interface Attributes {
 	slug: string;
@@ -36,6 +37,8 @@ interface CmsItem {
 
 const CMS_URL = "http://localhost:1337";
 
+export const CACHE_TAG_REVIEWS = "reviews";
+
 // export const getReview = async (slug: string): Promise<FullReview> => {
 // 	const text = await readFile(`./content/reviews/${slug}.md`, "utf8");
 // 	const {
@@ -51,7 +54,8 @@ const fetchReviews = async (parameters: unknown) => {
 	const url =
 		`${CMS_URL}/api/reviews?` +
 		qs.stringify(parameters, { encodeValuesOnly: true });
-	const response = await fetch(url);
+	//console.log("[fetchReviews]:", url);
+	const response = await fetch(url, { next: { tags: [CACHE_TAG_REVIEWS] } });
 	if (!response.ok) {
 		throw new Error(`CMS returned ${response.status} for ${url}`);
 	}
@@ -69,7 +73,7 @@ const toReview = (item: CmsItem): Review => {
 		image: CMS_URL + attributes.image.data.attributes.url,
 	};
 };
-export const getReview = async (slug: string): Promise<Review> => {
+export const getReview = async (slug: string): Promise<Review | null> => {
 	const { data } = await fetchReviews({
 		filters: { slug: { $eq: slug } },
 		fields: ["slug", "title", "body", "subtitle", "publishedAt"],
@@ -77,6 +81,9 @@ export const getReview = async (slug: string): Promise<Review> => {
 		pagination: { pageSize: 1, withCount: false },
 		sort: ["publishedAt:desc"],
 	});
+	if (data.length === 0) {
+		return null;
+	}
 	const item = data[0];
 	return { ...toReview(item), body: await marked(item.attributes.body) };
 };
@@ -109,14 +116,17 @@ export const getSlugs = async (): Promise<string[]> => {
 // 	return reviews;
 // };
 
-export const getReviews = async (pageSize: number): Promise<Review[]> => {
-	const { data } = await fetchReviews({
+export const getReviews = async (
+	pageSize: number,
+	page?: number
+): Promise<PaginatedReviews> => {
+	const { data, meta } = await fetchReviews({
 		fields: ["slug", "title", "subtitle", "publishedAt"],
 		populate: { image: { fields: ["url"] } },
-		pagination: { pageSize },
+		pagination: { pageSize, page },
 		sort: ["publishedAt:desc"],
 	});
-	return data.map(toReview);
+	return { pageCount: meta.pagination.pageCount, reviews: data.map(toReview) };
 };
 
 // export const getFeaturedReview = async (): Promise<Review> => {

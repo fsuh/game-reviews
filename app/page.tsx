@@ -3,8 +3,14 @@ import Image from "next/image";
 import Heading from "@/components/Heading";
 import { getReviews } from "@/lib/reviews";
 
+// export const revalidate = 30;
+
 const HomePage = async () => {
-	const reviews = await getReviews(3);
+	const { reviews } = await getReviews(3);
+	console.log(
+		"[HomePage] rending:",
+		reviews.map((review) => review.slug).join(",")
+	);
 	return (
 		<>
 			<Heading>Indie Gamer</Heading>
