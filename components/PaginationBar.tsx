@@ -39,7 +39,7 @@ const PaginationBar = ({
 }) => {
 	return (
 		<>
-			<div className="flex gap-2 pb-3">
+			<div className="flex gap-2 items-center">
 				<PaginationLink
 					href={`${href}?page=${page - 1}`}
 					enabled={page > 1}

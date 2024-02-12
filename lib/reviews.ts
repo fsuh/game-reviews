@@ -1,3 +1,4 @@
+import "server-only";
 //import { readdir, readFile } from "node:fs/promises";
 //import matter from "gray-matter";
 import { marked } from "marked";
@@ -29,6 +30,8 @@ export interface Attributes {
 		};
 	};
 }
+
+export type SearchableReview = Pick<Attributes, "slug" | "title">;
 
 interface CmsItem {
 	id: number;
@@ -133,3 +136,18 @@ export const getReviews = async (
 // 	const reviews = await getReviews();
 // 	return reviews[0];
 // };
+
+export const searchReviews = async (
+	query: string
+): Promise<SearchableReview[]> => {
+	const { data } = await fetchReviews({
+		filters: { title: { $containsi: query } },
+		fields: ["slug", "title"],
+		sort: ["title"],
+		pagination: { pageSize: 5 },
+	});
+	return data.map(({ attributes }: { attributes: SearchableReview }) => ({
+		slug: attributes.slug,
+		title: attributes.title,
+	}));
+};
