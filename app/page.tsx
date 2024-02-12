@@ -7,10 +7,10 @@ import { getReviews } from "@/lib/reviews";
 
 const HomePage = async () => {
 	const { reviews } = await getReviews(3);
-	console.log(
-		"[HomePage] rending:",
-		reviews.map((review) => review.slug).join(",")
-	);
+	// console.log(
+	// 	"[HomePage] rending:",
+	// 	reviews.map((review) => review.slug).join(",")
+	// );
 	return (
 		<>
 			<Heading>Indie Gamer</Heading>

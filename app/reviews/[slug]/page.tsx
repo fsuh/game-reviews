@@ -30,7 +30,7 @@ export const generateStaticParams = async (): Promise<ReviewPageParams[]> => {
 };
 
 const ReviewPages = async ({ params: { slug } }: ReviewPageProps) => {
-	console.log("[ReviewPage] rendering:", slug);
+	//console.log("[ReviewPage] rendering:", slug);
 	const review = await getReview(slug);
 	if (!review) {
 		notFound();
