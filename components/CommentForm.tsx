@@ -1,27 +1,69 @@
-import { redirect } from "next/navigation";
-import { createComment } from "@/lib/comments";
-import { revalidatePath } from "next/cache";
+"use client";
 
-const CommentForm = ({ slug, title }: { slug: string; title: string }) => {
-	const action = async (formData: FormData) => {
-		"use server";
-		const comment = await createComment({
-			slug,
-			user: formData.get("user") as string,
-			message: formData.get("message") as string,
-		});
-		//console.log("[action] created: ", comment);
-		revalidatePath(`/reviews/${slug}`);
-		redirect(`/reviews/${slug}`);
+import { useState } from "react";
+import { createCommentAction } from "@/app/reviews/actions";
+import type { ActionError } from "@/app/reviews/actions";
+interface CommentFormProps {
+	slug: string;
+	title: string;
+}
+interface CommentFormState {
+	loading: boolean;
+	error: ActionError | null;
+}
+
+// const useFormState = (action) => {
+// 	onst[(state, setState)] = useState<CommentFormState>({
+// 		loading: false,
+// 		error: null,
+// 	});
+// 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+// 		event.preventDefault();
+// 		setState({ loading: true, error: null });
+// 		const form = event.currentTarget;
+// 		const formData = new FormData(form);
+// 		const result = await action(formData);
+// 		if (result?.isError) {
+// 			setState({ loading: false, error: result });
+// 		} else {
+// 			form.reset();
+// 			setState({ loading: false, error: null });
+// 		}
+// 	};
+// 	return [state, handleSubmit];
+// };
+
+const CommentForm = ({ slug, title }: CommentFormProps) => {
+	const [state, setState] = useState<CommentFormState>({
+		loading: false,
+		error: null,
+	});
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		setState({ loading: true, error: null });
+		const form = event.currentTarget;
+		const formData = new FormData(form);
+		const result = await createCommentAction(formData);
+		if (result?.isError) {
+			setState({ loading: false, error: result });
+		} else {
+			form.reset();
+			setState({ loading: false, error: null });
+		}
 	};
 	return (
 		<form
-			action={action}
+			onSubmit={handleSubmit}
 			className="border bg-white flex flex-col gap-2 mt-3 px-3 py-2 rounded"
 		>
 			<p className="pb-1">
 				Already played <strong>{title}</strong>? Have your say!
 			</p>
+			<input
+				type="hidden"
+				name="slug"
+				value={slug}
+			/>
 			<div className="flex">
 				<label
 					htmlFor="userField"
@@ -33,6 +75,8 @@ const CommentForm = ({ slug, title }: { slug: string; title: string }) => {
 					type="text"
 					id="userField"
 					name="user"
+					required
+					maxLength={50}
 					className="border px-2 py-1 rounded w-48"
 				/>
 			</div>
@@ -46,12 +90,18 @@ const CommentForm = ({ slug, title }: { slug: string; title: string }) => {
 				<textarea
 					id="messageField"
 					name="message"
+					required
+					maxLength={500}
 					className="border px-2 py-1 rounded w-full"
 				/>
 			</div>
+			{Boolean(state.error) && (
+				<p className="text-red-700">{state.error?.message}</p>
+			)}
 			<button
 				type="submit"
-				className="bg-orange-800 rounded px-2 py-1 self-center text-slate-50 hover:bg-orange-700"
+				disabled={state.loading}
+				className="bg-orange-800 rounded px-2 py-1 self-center text-slate-50 hover:bg-orange-700 disabled:bg-slate-500 disabled:cursor-not-allowed"
 			>
 				Submit
 			</button>
