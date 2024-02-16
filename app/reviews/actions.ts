@@ -2,12 +2,15 @@
 import { redirect } from "next/navigation";
 import { createComment } from "@/lib/comments";
 import { revalidatePath } from "next/cache";
-import { CreateCommentData } from "@/lib/comments";
+import type { CreateCommentData } from "@/lib/comments";
 
 export interface ActionError {
 	isError: boolean;
 	message: string;
 }
+export type ActionFunction = (
+	formData: FormData
+) => Promise<undefined | ActionError>;
 
 export const createCommentAction = async (
 	formData: FormData

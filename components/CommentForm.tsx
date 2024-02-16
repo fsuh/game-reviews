@@ -2,55 +2,15 @@
 
 import { useState } from "react";
 import { createCommentAction } from "@/app/reviews/actions";
-import type { ActionError } from "@/app/reviews/actions";
+import { useFormState } from "@/lib/hooks";
+
+
 interface CommentFormProps {
 	slug: string;
 	title: string;
 }
-interface CommentFormState {
-	loading: boolean;
-	error: ActionError | null;
-}
-
-// const useFormState = (action) => {
-// 	onst[(state, setState)] = useState<CommentFormState>({
-// 		loading: false,
-// 		error: null,
-// 	});
-// 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-// 		event.preventDefault();
-// 		setState({ loading: true, error: null });
-// 		const form = event.currentTarget;
-// 		const formData = new FormData(form);
-// 		const result = await action(formData);
-// 		if (result?.isError) {
-// 			setState({ loading: false, error: result });
-// 		} else {
-// 			form.reset();
-// 			setState({ loading: false, error: null });
-// 		}
-// 	};
-// 	return [state, handleSubmit];
-// };
-
 const CommentForm = ({ slug, title }: CommentFormProps) => {
-	const [state, setState] = useState<CommentFormState>({
-		loading: false,
-		error: null,
-	});
-	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		setState({ loading: true, error: null });
-		const form = event.currentTarget;
-		const formData = new FormData(form);
-		const result = await createCommentAction(formData);
-		if (result?.isError) {
-			setState({ loading: false, error: result });
-		} else {
-			form.reset();
-			setState({ loading: false, error: null });
-		}
-	};
+	const [state, handleSubmit] = useFormState(createCommentAction);
 	return (
 		<form
 			onSubmit={handleSubmit}

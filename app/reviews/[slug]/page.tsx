@@ -1,11 +1,13 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/outline";
 import { getReview, getSlugs } from "@/lib/reviews";
 import Heading from "@/components/Heading";
 import ShareLinkButton from "@/components/ShareLinkButton";
 import CommentList from "@/components/CommentList";
 import CommentForm from "@/components/CommentForm";
+import CommentListSkeleton from "@/components/CommentListSkeleton";
 
 interface ReviewPageParams {
 	slug: string;
@@ -34,6 +36,7 @@ export const generateStaticParams = async (): Promise<ReviewPageParams[]> => {
 
 const ReviewPages = async ({ params: { slug } }: ReviewPageProps) => {
 	//console.log("[ReviewPage] rendering:", slug);
+	// await new Promise((resolve) => setTimeout(resolve, 3000)); // simulate loading time
 	const review = await getReview(slug);
 	if (!review) {
 		notFound();
@@ -67,7 +70,9 @@ const ReviewPages = async ({ params: { slug } }: ReviewPageProps) => {
 					slug={review.slug}
 					title={review.title}
 				/>
-				<CommentList slug={review.slug} />
+				<Suspense fallback={<CommentListSkeleton />}>
+					<CommentList slug={review.slug} />
+				</Suspense>
 			</section>
 		</>
 	);
